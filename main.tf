@@ -38,7 +38,7 @@ resource "azurerm_network_security_rule" "rancher-server-security-rule-web" {
 
 resource "azurerm_network_security_rule" "rancher-server-security-rule-udp-500" {
   access = "Allow"
-  destination_address_prefix = "${azurerm_network_interface.rancher-server-inet.private_ip_address}"
+  destination_address_prefix = "${var.subnet_address_prefix}"
   destination_port_range = "500"
   direction = "Inbound"
   name = "${var.rancher_server_name}-udp-500"
@@ -52,7 +52,7 @@ resource "azurerm_network_security_rule" "rancher-server-security-rule-udp-500" 
 
 resource "azurerm_network_security_rule" "rancher-server-security-rule-udp-4500" {
   access = "Allow"
-  destination_address_prefix = "${azurerm_network_interface.rancher-server-inet.private_ip_address}"
+  destination_address_prefix = "${var.subnet_address_prefix}"
   destination_port_range = "4500"
   direction = "Inbound"
   name = "${var.rancher_server_name}-udp-4500"

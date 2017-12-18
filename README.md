@@ -17,6 +17,7 @@ Module Input Variables
 - `security_group_name` - Security group name on which to add security rules
 - `ssh_private_key_file_path` - Absolute path to private SSH key
 - `ssh_public_key_file_path` - Absolute path to public SSH key
+- `subnet_address_prefix` - Subnet address prefix
 - `subnet_id` - Subnet ID where to put Rancher server
 - `subscription_id` - Subscription ID from Azure subscription
 - `tenant_id` - Tenant ID from Azure service principal
@@ -46,6 +47,7 @@ module "rancher_server" {
   security_group_name = "rancher-subnet-front-nsg"
   ssh_private_key_file_path = "/home/username/.ssh/id_rsa"
   ssh_public_key_file_path = "/home/username.ssh/id_rsa.pub"
+  subnet_address_prefix = "10.3.1.0/24"
   subnet_id = "/subscriptions/XXXX/resourceGroups/resource-group/providers/Microsoft.Network/virtualNetworks/prefix-vnet/subnets/prefix-subnet"
   subscription_id = "XXXX"
   tenant_id = "XXXX"

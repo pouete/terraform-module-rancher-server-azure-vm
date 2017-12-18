@@ -62,6 +62,9 @@ variable "ssh_username" {
 variable "security_group_name" {
   description = "Security group name on which to add security rules"
 }
+variable "subnet_address_prefix" {
+  description = "Subnet address prefix"
+}
 variable "subnet_id" {
   description = "Subnet ID where to put Rancher server"
 }
