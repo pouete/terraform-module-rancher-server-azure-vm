@@ -6,7 +6,7 @@ provider "azurerm" {
   tenant_id       = "${var.tenant_id}"
 }
 
-# create network interface rancher server
+# Create network interface rancher server
 resource "azurerm_network_interface" "rancher-server-inet" {
   location = "${var.location}"
   name = "${var.resource_prefix_name}-${var.rancher_server_name}-inet"
@@ -21,8 +21,9 @@ resource "azurerm_network_interface" "rancher-server-inet" {
   }
 }
 
-# create specific security rules for Rancher server
+# Create specific security rules for Rancher server
 resource "azurerm_network_security_rule" "rancher-server-security-rule-web" {
+
   access = "Allow"
   destination_address_prefix = "${azurerm_network_interface.rancher-server-inet.private_ip_address}"
   destination_port_range = "${var.rancher_server_port}"
@@ -34,35 +35,9 @@ resource "azurerm_network_security_rule" "rancher-server-security-rule-web" {
   resource_group_name = "${var.resource_group_name}"
   source_address_prefix = "*"
   source_port_range = "*"
+  
 }
 
-resource "azurerm_network_security_rule" "rancher-server-security-rule-udp-500" {
-  access = "Allow"
-  destination_address_prefix = "${var.subnet_address_prefix}"
-  destination_port_range = "500"
-  direction = "Inbound"
-  name = "${var.rancher_server_name}-udp-500"
-  network_security_group_name = "${var.security_group_name}"
-  priority = 110
-  protocol = "Udp"
-  resource_group_name = "${var.resource_group_name}"
-  source_address_prefix = "${var.vnet_address_space}"
-  source_port_range = "*"
-}
-
-resource "azurerm_network_security_rule" "rancher-server-security-rule-udp-4500" {
-  access = "Allow"
-  destination_address_prefix = "${var.subnet_address_prefix}"
-  destination_port_range = "4500"
-  direction = "Inbound"
-  name = "${var.rancher_server_name}-udp-4500"
-  network_security_group_name = "${var.security_group_name}"
-  priority = 120
-  protocol = "Udp"
-  resource_group_name = "${var.resource_group_name}"
-  source_address_prefix = "${var.vnet_address_space}"
-  source_port_range = "*"
-}
 
 # create managed disk for rancher server vm
 resource "azurerm_managed_disk" "rancher-server-managed-disk" {
@@ -74,6 +49,7 @@ resource "azurerm_managed_disk" "rancher-server-managed-disk" {
   storage_account_type = "Standard_LRS"
 }
 
+# Create the rancher server public IP
 resource "azurerm_public_ip" "rancher-server-public-ip" {
   location = "${var.location}"
   name = "${var.resource_prefix_name}-${var.rancher_server_name}-public-ip"
@@ -81,13 +57,14 @@ resource "azurerm_public_ip" "rancher-server-public-ip" {
   resource_group_name = "${var.resource_group_name}"
 }
 
+# Retrieve rancher server public IP
 data "azurerm_public_ip" "rancher-server-public-ip" {
   name = "${azurerm_public_ip.rancher-server-public-ip.name}"
   resource_group_name = "${var.resource_group_name}"
   depends_on = ["azurerm_virtual_machine.rancher-server"]
 }
 
-# create vm rancher server
+# Create vm rancher server
 resource "azurerm_virtual_machine" "rancher-server" {
   delete_os_disk_on_termination = true
   location = "${var.location}"
