@@ -21,7 +21,7 @@ resource "azurerm_network_interface" "rancher-server-inet" {
   }
 }
 
-# Create specific security rules for Rancher server
+# Create specific security rules for Rancher server (internal)
 resource "azurerm_network_security_rule" "rancher-server-security-rule-web" {
 
   access = "Allow"
@@ -38,6 +38,22 @@ resource "azurerm_network_security_rule" "rancher-server-security-rule-web" {
   
 }
 
+# Create specific security rules for Rancher server (external)
+resource "azurerm_network_security_rule" "rancher-server-security-rule-web-external" {
+
+  access = "Allow"
+  destination_address_prefix = "${data.azurerm_public_ip.rancher-server-public-ip.ip_address}"
+  destination_port_range = "${var.rancher_server_port}"
+  direction = "Inbound"
+  name = "${var.rancher_server_name}-${var.rancher_server_port}-external"
+  network_security_group_name = "${var.security_group_name}"
+  priority = 101
+  protocol = "Tcp"
+  resource_group_name = "${var.resource_group_name}"
+  source_address_prefix = "*"
+  source_port_range = "*"
+
+}
 
 # create managed disk for rancher server vm
 resource "azurerm_managed_disk" "rancher-server-managed-disk" {
