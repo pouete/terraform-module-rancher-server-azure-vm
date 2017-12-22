@@ -9,3 +9,7 @@ output "rancher_server_ip" {
 output "rancher_server_port" {
   value = "${var.rancher_server_port}"
 }
+
+output "rancher_api_url" {
+  value = "http://${data.azurerm_public_ip.rancher-server-public-ip.ip_address}:${var.rancher_server_port}"
+}
