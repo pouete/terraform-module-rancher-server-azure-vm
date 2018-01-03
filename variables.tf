@@ -33,10 +33,21 @@ variable "rancher_server_name" {
   default = "server" // Concatenated with ${var.resource_prefix_name}
   description = "Rancher server name"
 }
-variable "rancher_server_port" {
-  default = 8080
-  description = "Port on which Rancher server will listen"
+
+// External domain
+variable "rancher_domain" {
+  description = "The rancher subdomain for the DNS zone"
 }
+
+// DNS zone
+variable "rancher_dns_zone" {
+  description = "The rancher DNS zone"
+}
+
+variable "rancher_dns_zone_resource_group" {
+  description = "The resource group for the DNS zone"
+}
+
 variable "rancher_server_private_ip" {
   default = "10.3.1.4"
   description = "Rancher server private IP"

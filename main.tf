@@ -21,31 +21,15 @@ resource "azurerm_network_interface" "rancher-server-inet" {
   }
 }
 
-# Create specific security rules for Rancher server (internal)
-resource "azurerm_network_security_rule" "rancher-server-security-rule-web" {
 
-  access = "Allow"
-  destination_address_prefix = "${azurerm_network_interface.rancher-server-inet.private_ip_address}"
-  destination_port_range = "${var.rancher_server_port}"
-  direction = "Inbound"
-  name = "${var.rancher_server_name}-${var.rancher_server_port}"
-  network_security_group_name = "${var.security_group_name}"
-  priority = 100
-  protocol = "Tcp"
-  resource_group_name = "${var.resource_group_name}"
-  source_address_prefix = "*"
-  source_port_range = "*"
-  
-}
-
-# Create specific security rules for Rancher server (external)
-resource "azurerm_network_security_rule" "rancher-server-security-rule-web-external" {
+# Create specific security rules for Rancher server HTTPS 443
+resource "azurerm_network_security_rule" "rancher-server-security-rule-web-external-443" {
 
   access = "Allow"
   destination_address_prefix = "${data.azurerm_public_ip.rancher-server-public-ip.ip_address}"
-  destination_port_range = "${var.rancher_server_port}"
+  destination_port_range = "443"
   direction = "Inbound"
-  name = "${var.rancher_server_name}-${var.rancher_server_port}-external"
+  name = "${var.rancher_server_name}-443-external"
   network_security_group_name = "${var.security_group_name}"
   priority = 101
   protocol = "Tcp"
@@ -53,6 +37,65 @@ resource "azurerm_network_security_rule" "rancher-server-security-rule-web-exter
   source_address_prefix = "*"
   source_port_range = "*"
 
+}
+
+# Create specific security rules for Rancher server HTTP 80
+resource "azurerm_network_security_rule" "rancher-server-security-rule-web-external-80" {
+
+  access = "Allow"
+  destination_address_prefix = "${data.azurerm_public_ip.rancher-server-public-ip.ip_address}"
+  destination_port_range = "80"
+  direction = "Inbound"
+  name = "${var.rancher_server_name}-80-external"
+  network_security_group_name = "${var.security_group_name}"
+  priority = 102
+  protocol = "Tcp"
+  resource_group_name = "${var.resource_group_name}"
+  source_address_prefix = "*"
+  source_port_range = "*"
+
+}
+
+# Create specific security rules for Rancher server HTTPS 443 (internal)
+resource "azurerm_network_security_rule" "rancher-server-security-rule-web-internal-443" {
+
+  access = "Allow"
+  destination_address_prefix = "${azurerm_network_interface.rancher-server-inet.private_ip_address}"
+  destination_port_range = "443"
+  direction = "Inbound"
+  name = "${var.rancher_server_name}-443-internal"
+  network_security_group_name = "${var.security_group_name}"
+  priority = 103
+  protocol = "Tcp"
+  resource_group_name = "${var.resource_group_name}"
+  source_address_prefix = "*"
+  source_port_range = "*"
+
+}
+
+# Create specific security rules for Rancher server HTTP 80
+resource "azurerm_network_security_rule" "rancher-server-security-rule-web-internal-80" {
+
+  access = "Allow"
+  destination_address_prefix = "${azurerm_network_interface.rancher-server-inet.private_ip_address}"
+  destination_port_range = "80"
+  direction = "Inbound"
+  name = "${var.rancher_server_name}-80-internal"
+  network_security_group_name = "${var.security_group_name}"
+  priority = 104
+  protocol = "Tcp"
+  resource_group_name = "${var.resource_group_name}"
+  source_address_prefix = "*"
+  source_port_range = "*"
+
+}
+
+resource "azurerm_dns_a_record" "rancher-server-external-dns-record" {
+  name = "${var.rancher_domain}"
+  records = ["${data.azurerm_public_ip.rancher-server-public-ip.ip_address}"]
+  resource_group_name = "${var.rancher_dns_zone_resource_group}"
+  ttl = 300
+  zone_name = "${var.rancher_dns_zone}"
 }
 
 # create managed disk for rancher server vm
@@ -79,6 +122,8 @@ data "azurerm_public_ip" "rancher-server-public-ip" {
   resource_group_name = "${var.resource_group_name}"
   depends_on = ["azurerm_virtual_machine.rancher-server"]
 }
+
+#
 
 # Create vm rancher server
 resource "azurerm_virtual_machine" "rancher-server" {
