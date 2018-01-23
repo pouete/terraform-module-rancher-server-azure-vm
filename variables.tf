@@ -1,17 +1,3 @@
-//Connection credentials to Azure API
-variable "client_id" {
-  description = "Client ID from Azure service principal"
-}
-variable "client_secret" {
-  description = "Client secret from Azure service principal"
-}
-variable "tenant_id" {
-  description = "Tenant ID from Azure service principal"
-}
-variable "subscription_id" {
-  description = "Subscription ID from Azure subscription"
-}
-
 //Common
 variable "resource_group_name" {
   description = "Resource group name from Azure"
