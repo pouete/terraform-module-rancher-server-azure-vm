@@ -39,7 +39,7 @@ Usage
 module "rancher_server" {
   source = "github.com/nespresso/terraform-module-rancher-server-azure-vm"
 
-  rancher_dns_zone = "dsu.nestle.biz"
+  rancher_dns_zone = "rancher.dns.zone"
   rancher_dns_zone_resource_group = "resource-group-dns-zone"
   rancher_domain = "rancher"
   rancher_sever_image_id = "/subscriptions/XXXX/resourceGroups/resource-group/providers/Microsoft.Compute/images/Rancher-Image"
