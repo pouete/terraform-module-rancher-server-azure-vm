@@ -36,6 +36,13 @@ Usage
 -----
 
 ```hcl
+provider "azurerm" {
+  subscription_id = "XXXX"
+  client_id       = "XXXX"
+  client_secret   = "XXXX"
+  tenant_id       = "XXXX"
+}
+
 module "rancher_server" {
   source = "github.com/nespresso/terraform-module-rancher-server-azure-vm"
 
@@ -64,7 +71,6 @@ Outputs
  - `rancher_server_id` - Rancher server ID
  - `rancher_server_ip` - Rancher server public IP
 
-Authors
 =======
 
 nicolas.cheutin@nestle.com
