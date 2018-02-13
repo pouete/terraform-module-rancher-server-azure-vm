@@ -10,6 +10,9 @@ Module Input Variables
 
 ## required
 
+- `rancher_dns_zone` - Rancher DNS Zone
+- `rancher_dns_zone_resource_group` - Resource group in which the DNS Zone is
+- `rancher_domain` - Rancher domain
 - `rancher_sever_image_id` - Virtual Machine Image ID for Rancher server
 - `resource_group_name` - Resource group name from Azure
 - `security_group_name` - Security group name on which to add security rules
@@ -33,9 +36,19 @@ Usage
 -----
 
 ```hcl
+provider "azurerm" {
+  subscription_id = "XXXX"
+  client_id       = "XXXX"
+  client_secret   = "XXXX"
+  tenant_id       = "XXXX"
+}
+
 module "rancher_server" {
   source = "github.com/nespresso/terraform-module-rancher-server-azure-vm"
 
+  rancher_dns_zone = "rancher.dns.zone"
+  rancher_dns_zone_resource_group = "resource-group-dns-zone"
+  rancher_domain = "rancher"
   rancher_sever_image_id = "/subscriptions/XXXX/resourceGroups/resource-group/providers/Microsoft.Compute/images/Rancher-Image"
   resource_group_name = "resource-group"
   security_group_name = "rancher-subnet-front-nsg"
@@ -52,12 +65,12 @@ Tested only with `Terraform v0.11.0` and `provider.azurerm v0.3.3`, which doesn'
 Outputs
 =======
 
+ - `rancher_api_url` - Rancher server API url
+ - `rancher_domain` - Rancher server domain
+ - `rancher_fqdn` - Rancher server FQDN
  - `rancher_server_id` - Rancher server ID
- - `rancher_server_public_ip` - Rancher server public IP
- - `rancher_server_private_ip` - Rancher server private IP
- - `rancher_server_port` - Rancher server port
+ - `rancher_server_ip` - Rancher server public IP
 
-Authors
 =======
 
 nicolas.cheutin@nestle.com
