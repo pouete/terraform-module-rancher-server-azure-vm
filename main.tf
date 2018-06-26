@@ -82,6 +82,11 @@ resource "azurerm_network_security_rule" "rancher-server-security-rule-web-inter
 
 }
 
+resource "azurerm_dns_zone" "rancher-dns-zone" {
+  name                = "${var.rancher_dns_zone}"
+  resource_group_name = "${var.rancher_dns_zone_resource_group}"
+}
+
 resource "azurerm_dns_a_record" "rancher-server-external-dns-record" {
   name = "${var.rancher_domain}"
   records = ["${data.azurerm_public_ip.rancher-server-public-ip.ip_address}"]
